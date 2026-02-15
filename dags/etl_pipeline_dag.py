@@ -98,19 +98,16 @@ with DAG(
     transform = PythonOperator(
         task_id='transform',
         python_callable=transform_data,
-        provide_context=True,
     )
 
     load = PythonOperator(
         task_id='load',
         python_callable=load_data,
-        provide_context=True,
     )
 
     validate = PythonOperator(
         task_id='validate',
         python_callable=validate_data,
-        provide_context=True,
     )
 
     # Define the pipeline flow
