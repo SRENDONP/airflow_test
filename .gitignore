@@ -6,6 +6,9 @@ airflow-webserver.pid
 standalone_admin_password.txt
 webserver_config.py
 
+# Environment
+.env
+
 # Python
 __pycache__/
 *.py[cod]
