@@ -17,8 +17,26 @@ This project provides a practical environment to learn and test Apache Airflow c
 
 - Docker and Docker Compose installed
 - Python 3.8+ (for local development)
+- Make (optional, for using Makefile commands)
 
 ### Using Docker (Recommended)
+
+**Option 1: Using Makefile (simplest)**
+```bash
+# Start Airflow
+make start
+
+# View logs
+make logs
+
+# Stop Airflow
+make stop
+
+# See all available commands
+make help
+```
+
+**Option 2: Using Docker Compose directly**
 
 1. **Start Airflow services:**
    ```bash
@@ -37,6 +55,13 @@ This project provides a practical environment to learn and test Apache Airflow c
    ```
 
 ### Local Development Setup
+
+**Using the setup script:**
+```bash
+bash setup.sh
+```
+
+**Or manually:**
 
 1. **Create a virtual environment:**
    ```bash
