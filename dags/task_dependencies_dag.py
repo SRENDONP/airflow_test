@@ -4,8 +4,8 @@ This DAG demonstrates different ways to set task dependencies in Airflow.
 """
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.bash import BashOperator
+from airflow.providers.standard.operators.python import PythonOperator
 
 
 def task_a():
@@ -42,7 +42,7 @@ with DAG(
     'task_dependencies_example',
     default_args=default_args,
     description='DAG showing task dependency patterns',
-    schedule_interval='@daily',
+    schedule='@daily',
     start_date=datetime(2024, 1, 1),
     catchup=False,
     tags=['example', 'dependencies'],

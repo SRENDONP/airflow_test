@@ -4,7 +4,7 @@ This DAG demonstrates a simple ETL (Extract, Transform, Load) pipeline pattern.
 """
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 import json
 
 
@@ -83,7 +83,7 @@ with DAG(
     'etl_pipeline_example',
     default_args=default_args,
     description='Simple ETL pipeline demonstration',
-    schedule_interval='@hourly',
+    schedule='@hourly',
     start_date=datetime(2024, 1, 1),
     catchup=False,
     tags=['example', 'etl'],

@@ -55,7 +55,9 @@ def test_dag_structure():
     for dag_id, dag in dagbag.dags.items():
         print(f"  - {dag_id}")
         print(f"    Tasks: {len(dag.tasks)}")
-        print(f"    Schedule: {dag.schedule_interval}")
+        # Use 'schedule' for Airflow 3.x, fallback to 'schedule_interval' for 2.x
+        schedule = getattr(dag, 'schedule', None) or getattr(dag, 'schedule_interval', None)
+        print(f"    Schedule: {schedule}")
         
         # Validate basic DAG properties
         assert dag.dag_id, f"DAG {dag_id} missing dag_id"

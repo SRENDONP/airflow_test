@@ -4,8 +4,8 @@ This is a basic example DAG that prints 'Hello World' using a BashOperator.
 """
 from datetime import datetime, timedelta
 from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.bash import BashOperator
+from airflow.providers.standard.operators.python import PythonOperator
 
 
 def print_hello():
@@ -29,7 +29,7 @@ with DAG(
     'hello_world',
     default_args=default_args,
     description='A simple hello world DAG',
-    schedule_interval=timedelta(days=1),
+    schedule=timedelta(days=1),
     start_date=datetime(2024, 1, 1),
     catchup=False,
     tags=['example', 'tutorial'],
