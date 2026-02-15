@@ -1,0 +1,82 @@
+# ============================================================================
+# Docker Compose para Apache Airflow 2.7.1
+# ============================================================================
+#
+# Esta configuración usa modo standalone (webserver + scheduler en un contenedor)
+# para simplificar el desarrollo local.
+#
+# Servicios:
+#   - postgres: Base de datos PostgreSQL para metadatos de Airflow
+#   - airflow: Airflow en modo standalone (webserver + scheduler)
+#
+# Uso:
+#   docker compose up -d      # Iniciar
+#   docker compose down       # Detener
+#   docker compose logs -f    # Ver logs
+# ============================================================================
+
+version: '3.8'
+
+services:
+  # --------------------------------------------------------------------------
+  # PostgreSQL Database
+  # --------------------------------------------------------------------------
+  postgres:
+    image: postgres:13
+    container_name: airflow-postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 10
+      timeout: 5s
+    restart: always
+
+  # --------------------------------------------------------------------------
+  # Airflow Standalone (webserver + scheduler)
+  # --------------------------------------------------------------------------
+  airflow:
+    image: apache/airflow:2.7.1-python3.11
+    container_name: airflow-standalone
+    environment:
+      # Conexión a la base de datos
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      # Configuración de Airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'true'
+      # Usuario admin (se crea automáticamente)
+      _AIRFLOW_DB_UPGRADE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin
+    volumes:
+      # Montar carpetas locales
+      - ./dags:/opt/airflow/dags         # DAGs
+      - ./logs:/opt/airflow/logs         # Logs
+      - ./plugins:/opt/airflow/plugins   # Plugins
+    ports:
+      - "8080:8080"  # Interfaz web
+    command: >
+      bash -c "
+        airflow db init &&
+        airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com || echo 'User already exists' &&
+        airflow webserver &
+        airflow scheduler
+      "
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+# Volúmenes persistentes
+volumes:
+  postgres-db-volume:

@@ -1,0 +1,17 @@
+# Apache Airflow core (versión compatible con Python 3.14)
+apache-airflow==3.0.6
+
+# Base dependencies for local development
+apache-airflow[celery]==3.0.6
+apache-airflow[postgres]==3.0.6
+apache-airflow[redis]==3.0.6
+
+# Additional useful providers
+apache-airflow[http]==3.0.6
+apache-airflow[ftp]==3.0.6
+apache-airflow[imap]==3.0.6
+apache-airflow[sqlite]==3.0.6
+
+# Development tools
+pytest
+pytest-airflow
